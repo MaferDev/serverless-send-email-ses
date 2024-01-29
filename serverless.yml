@@ -1,0 +1,40 @@
+service: incamotors-sendMail
+provider:
+  name: aws
+  runtime: nodejs16.x
+  region: ${self:custom.regionFullname.${self:provider.stage}}
+  stage: ${opt:stage,'desa'}
+  iam:
+    role: arn:aws:iam::057824348965:role/incamotors-lambda-access-${self:provider.stage}-role
+  layers:
+    - arn:aws:lambda:${self:custom.regionFullname.${self:provider.stage}}:057824348965:layer:incamotors-${self:provider.stage}-base-layer:3
+
+  environment:
+    REGION: ${self:provider.region}
+    ENTORNO: ${self:custom.env.${self:provider.stage}}
+    BUCKET_NAME: ${file(config.${opt:stage, self:provider.stage}.yml):bucket_name}
+    BUCKET_PATH_NOTIFICATION: ${file(config.${opt:stage, self:provider.stage}.yml):bucket_path_notification}
+    EMAIL_NOTIFICATION: ${file(config.${opt:stage, self:provider.stage}.yml):email_notification}
+    EMAIL_COTIZACION: ${file(config.${opt:stage, self:provider.stage}.yml):email_cotization}
+    BASE_URL_IMAGE: ${file(config.${opt:stage, self:provider.stage}.yml):base_url_backoffice}
+
+functions:
+  sendMail:
+    handler: handler.sendMail
+
+custom:
+  nombreProyecto:
+    valor: incamotors-sendMail
+  regionFullname:
+    desa: us-east-2
+    test: us-east-2
+    prod: us-east-1
+  env:
+    desa: desa
+    test: test
+    prod: prod
+
+package:
+  exclude:
+    - package-lock.json
+    - node_modules/**

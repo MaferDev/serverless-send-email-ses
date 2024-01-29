@@ -1,0 +1,5 @@
+bucket_name: incamotors-desa-archivos
+bucket_path_notification: file/notification/
+email_notification: notificaciones@incamotors.pe
+email_cotization: notificaciones@incamotors.pe
+base_url_backoffice: https://master.d3ts9dphpbm8ik.amplifyapp.com
